@@ -14,7 +14,7 @@ def read_config(config_path):
 
 def run_task():
     print(f"Running task at: {time.ctime()}")
-    subprocess.run(["python3", "chunken.py"])
+    subprocess.run(["python3", "app.py"])
 
     schedule_next_run()
 
@@ -36,7 +36,7 @@ def main():
 
 
 if __name__ == "__main__":
-    config_path = 'chunker_config.json'
+    config_path = 'config.json'
     config = read_config(config_path)
     interval = config.get('scheduler_interval', 600)
     main()

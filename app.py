@@ -155,7 +155,7 @@ def chunk_and_save_files(config):
         ####### TODO: upsert the objects to MongoDB
         try:
             with MongoDatabase(env.mongo_uri) as client:
-                client.insert_one(database, namespace, mongo_objects)
+                client.insert_or_update_chunk(database, namespace, mongo_objects)
 
         except Exception as e:
             print(f"Error upserting to MongoDB: {e}")
