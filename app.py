@@ -187,7 +187,7 @@ def chunk_and_save_files(config):
 
                 # Extract the IDs of the matches of any orphan chunks
                 if len(query_response.matches) == 0:
-                    print("No orphaned chunks found.")
+                    print("No orphaned chunks found in Pinecone.")
                 else:
                     ids = []
                     for match in query_response.matches:
