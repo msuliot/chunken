@@ -16,7 +16,7 @@ class MongoDatabase:
         return s.lower() in ['true', '1', 't', 'y', 'yes']
 
     def __init__(self, mongo_uri):
-        print(f"Connecting to MongoDB at {mongo_uri}")
+        # print(f"Connecting to MongoDB at {mongo_uri}")
         self.mongo_client = MongoDatabase.get_mongo_client(mongo_uri)
 
     def __enter__(self):
