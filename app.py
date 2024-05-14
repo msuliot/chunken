@@ -186,9 +186,7 @@ def chunk_and_save_files(config):
                 )
 
                 # Extract the IDs of the matches of any orphan chunks
-                if len(query_response.matches) == 0:
-                    print("No orphaned chunks found in Pinecone.")
-                else:
+                if len(query_response.matches) != 0:
                     ids = []
                     for match in query_response.matches:
                         ids.append(match.id)
@@ -197,7 +195,7 @@ def chunk_and_save_files(config):
                         namespace=namespace,
                         ids=ids
                     )
-                    print(f"Deleted {len(ids)} orphaned chunks from Pinecone.")
+                    print(f".DELETED {len(ids)} orphaned chunks from Pinecone.")
 
             processed_files_count += 1
             total_chunks_created += len(chunks)

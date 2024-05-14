@@ -66,11 +66,11 @@ class MongoDatabase:
         update_result = self.update_one(database_name, collection_name, query, update, upsert=True)
 
         if update_result.matched_count > 0:
-            print("Document UPDATED with ID:", mongo_objects["_id"])
+            print("UPDATED Mongo with ID:", mongo_objects["_id"])
         elif update_result.upserted_id is not None:
-            print("Document INSERTED with ID:", update_result.upserted_id)
+            print("INSERTED Mongo with ID:", update_result.upserted_id)
         else:
-            print("No changes made.")
+            print(f"This should not happen. source: {mongo_objects['source']}")
 
         return update_result
     
