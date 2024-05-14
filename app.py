@@ -8,7 +8,8 @@ from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 import helpers.openai_helper as oai 
 from helpers.mongo_helper import MongoDatabase 
-from helpers.pinecone_helper import Pinecone 
+# from helpers.pinecone_helper import Pinecone 
+from pinecone import Pinecone, ServerlessSpec
 from msuliot.base_64 import Base64 # https://github.com/msuliot/package.utils.git
 
 from env_config import envs
@@ -72,7 +73,7 @@ def chunk_and_save_files(config):
     extension_limit = config['chuck_extension_limit']
     namespace = config['namespace']
     database = config['database']
-    print("Database:", database)
+    print("\nDatabase:", database)
     print("Namespace:", namespace)
 
     for filepath in file_paths:
@@ -155,7 +156,7 @@ def chunk_and_save_files(config):
         ####### TODO: upsert the objects to MongoDB
         try:
             with MongoDatabase(env.mongo_uri) as client:
-                client.insert_or_update_chunk(database, namespace, mongo_objects)
+                mongo_results = client.insert_or_update_chunk(database, namespace, mongo_objects)
 
         except Exception as e:
             print(f"Error upserting to MongoDB: {e}")
@@ -163,10 +164,40 @@ def chunk_and_save_files(config):
         else:
             print(f"Upserted {len(chunks)} chunks to MongoDB for {original_filename}")
 
-            # upsert the objects to Pinecone
             pc = Pinecone(api_key=env.pinecone_key)
             index = pc.Index(database)
-            index.upsert(vectors=pinecone_objects, namespace=namespace)
+            results = index.upsert(vectors=pinecone_objects, namespace=namespace)
+
+            print(f"Upserted {results.upserted_count} chunks to Pinecone for {original_filename}")
+                  
+            if mongo_results.matched_count > 0:
+                # Query to filter by metadata
+                last_chuck_id = generate_chunk_id(original_filename, len(chunks))
+                query_response = index.query(
+                    id=last_chuck_id,
+                    namespace=namespace,
+                    filter={
+                        "parent_id": {"$eq": Base64.encode(original_filename)},
+                        "chunk_number": {"$gt": len(chunks)}
+                    },
+                    top_k=100,
+                    include_metadata=False,
+                    include_values=False
+                )
+
+                # Extract the IDs of the matches of any orphan chunks
+                if len(query_response.matches) == 0:
+                    print("No orphaned chunks found.")
+                else:
+                    ids = []
+                    for match in query_response.matches:
+                        ids.append(match.id)
+
+                    index.delete(
+                        namespace=namespace,
+                        ids=ids
+                    )
+                    print(f"Deleted {len(ids)} orphaned chunks from Pinecone.")
 
             processed_files_count += 1
             total_chunks_created += len(chunks)

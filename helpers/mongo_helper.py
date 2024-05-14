@@ -66,13 +66,14 @@ class MongoDatabase:
         update_result = self.update_one(database_name, collection_name, query, update, upsert=True)
 
         if update_result.matched_count > 0:
-            print("Document updated.")
+            print("Document UPDATED with ID:", mongo_objects["_id"])
         elif update_result.upserted_id is not None:
-            print("Document inserted with ID:", update_result.upserted_id)
+            print("Document INSERTED with ID:", update_result.upserted_id)
         else:
             print("No changes made.")
 
         return update_result
+    
 
     def get_document_by_chunk_id(self, database_name, collection_name, chunk_id):
         pipeline = [

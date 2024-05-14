@@ -3,7 +3,7 @@
       "/Users/msuliot/text_output"
     ],
     "database": "blades-of-grass",
-    "namespace": "demo74",
+    "namespace": "demo24",
     "chunk_size": 1800, 
     "chuck_extension_limit": 248,
     "scheduler_interval": 60

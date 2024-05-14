@@ -57,50 +57,50 @@ class pinecone_logic:
             print(f"Error setting Pinecone index. Please check log file for details.")
             sys.exit(1)
 
-    # Function to upsert data
-    def upsert_data_df(self, df, create_if_missing):
-        print("Start: Upserting data to Pinecone index")
-        have_index = self.set_pinecone_index()
+    # # Function to upsert data
+    # def upsert_data_df(self, df, create_if_missing):
+    #     print("Start: Upserting data to Pinecone index")
+    #     have_index = self.set_pinecone_index()
 
-        if not have_index and not create_if_missing:
-            log.error(f"Index {self.index_name} not found, and create_if_missing is False.")
-            return False
-        elif not have_index and create_if_missing:
-            created = self.create_pinecone_index()
-            if not created:
-                log.error("error creating index")
-                return False
-            else:
-                self.set_pinecone_index()
-        elif have_index:
-            log.info(f"Index {self.index_name} already exists.")
-            pass
-        else:
-            log.error("Error setting Pinecone index.")
-            return False
+    #     if not have_index and not create_if_missing:
+    #         log.error(f"Index {self.index_name} not found, and create_if_missing is False.")
+    #         return False
+    #     elif not have_index and create_if_missing:
+    #         created = self.create_pinecone_index()
+    #         if not created:
+    #             log.error("error creating index")
+    #             return False
+    #         else:
+    #             self.set_pinecone_index()
+    #     elif have_index:
+    #         log.info(f"Index {self.index_name} already exists.")
+    #         pass
+    #     else:
+    #         log.error("Error setting Pinecone index.")
+    #         return False
         
         
-        log.info(f"Start: Upserting data to Pinecone index {self.index_name}")
-        prepped = []
+    #     log.info(f"Start: Upserting data to Pinecone index {self.index_name}")
+    #     prepped = []
 
-        for i, row in tqdm(df.iterrows(), total=df.shape[0], desc="Upserting data"):
-            # meta = ast.literal_eval(row['metadata'])
-            meta = row['metadata']
-            prepped.append({'id': str(row['id']), 
-                            'values': row['values'],
-                            'metadata': meta})
-            if len(prepped) >= 200: # batching upserts
-                self.index.upsert(prepped)
-                prepped = []
+    #     for i, row in tqdm(df.iterrows(), total=df.shape[0], desc="Upserting data"):
+    #         # meta = ast.literal_eval(row['metadata'])
+    #         meta = row['metadata']
+    #         prepped.append({'id': str(row['id']), 
+    #                         'values': row['values'],
+    #                         'metadata': meta})
+    #         if len(prepped) >= 200: # batching upserts
+    #             self.index.upsert(prepped)
+    #             prepped = []
 
-        # Upsert any remaining entries after the loop
-        if len(prepped) > 0:
-            self.index.upsert(prepped)
+    #     # Upsert any remaining entries after the loop
+    #     if len(prepped) > 0:
+    #         self.index.upsert(prepped)
         
         
-        log.info(f"Done: Upserting data to Pinecone index {self.index_name} with {len(df)} rows")
-        print(f"Done: Upserting data to Pinecone index {self.index_name} with {len(df)} rows")
-        return True
+    #     log.info(f"Done: Upserting data to Pinecone index {self.index_name} with {len(df)} rows")
+    #     print(f"Done: Upserting data to Pinecone index {self.index_name} with {len(df)} rows")
+    #     return True
 
 
     def search_pinecone_index(self, embed, top):
