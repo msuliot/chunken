@@ -1,6 +1,6 @@
-
+from dotenv import load_dotenv, find_dotenv
 import os
-
+load_dotenv(find_dotenv())
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
 MONGO = os.getenv('MONGO')

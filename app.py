@@ -71,6 +71,9 @@ def chunk_and_save_files(config):
     chunk_size = config['chunk_size']
     extension_limit = config['chuck_extension_limit']
     namespace = config['namespace']
+    database = config['database']
+    print("Database:", database)
+    print("Namespace:", namespace)
 
     for filepath in file_paths:
         print(".", end="", flush=True)
@@ -152,7 +155,7 @@ def chunk_and_save_files(config):
         ####### TODO: upsert the objects to MongoDB
         try:
             with MongoDatabase(env.mongo_uri) as client:
-                client.insert_one("blades_of_grass", namespace, mongo_objects)
+                client.insert_one(database, namespace, mongo_objects)
 
         except Exception as e:
             print(f"Error upserting to MongoDB: {e}")
@@ -162,7 +165,7 @@ def chunk_and_save_files(config):
 
             # upsert the objects to Pinecone
             pc = Pinecone(api_key=env.pinecone_key)
-            index = pc.Index("blades-of-grass")
+            index = pc.Index(database)
             index.upsert(vectors=pinecone_objects, namespace=namespace)
 
             processed_files_count += 1

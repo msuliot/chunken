@@ -18,6 +18,7 @@ class MongoDatabase:
 
 
     def __init__(self, mongo_uri):
+        print(f"Connecting to MongoDB at {mongo_uri}")
         self.mongo_client = MongoDatabase.get_mongo_client(mongo_uri)
         
 

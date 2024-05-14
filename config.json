@@ -2,7 +2,8 @@
     "input_directories": [
       "/Users/msuliot/text_output"
     ],
-    "namespace": "demo3",
+    "database": "blades-of-grass",
+    "namespace": "demo20",
     "chunk_size": 1800, 
     "chuck_extension_limit": 248,
     "scheduler_interval": 60
