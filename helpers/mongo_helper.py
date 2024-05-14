@@ -55,7 +55,7 @@ class MongoDatabase:
         return insert_result.inserted_id
 
 
-    def update_one(self, database_name, collection_name, query, update):
+    def update_one(self, database_name, collection_name, query, update, upsert=False):
         db = self.mongo_client[database_name]
         collection = db[collection_name]
         update_result = collection.update_one(query, update)
@@ -66,15 +66,21 @@ class MongoDatabase:
             query = {"_id": mongo_objects["_id"]}
 
             update = {
-                "$set": {"source": mongo_objects["source"]},
-                "$push": {"data": {
-                    "chunk_id": mongo_objects["data"][0]["chunk_id"],
-                    "chunk_number": mongo_objects["data"][0]["chunk_number"],
-                    "text": mongo_objects["data"][0]["text"],
-                }}
+                "$set": {
+                    "source": mongo_objects["source"],
+                    "data": mongo_objects["data"]
+                    },
             }
 
             update_result = self.update_one(database_name, collection_name, query, update, upsert=True)
+
+            if update_result > 0:
+                print("Document updated.")
+            elif update_result is not None:
+                print("Document inserted with ID:", update_result) ############# FAILS HERE
+            else:
+                print("No changes made.")
+
             return update_result
     
 
