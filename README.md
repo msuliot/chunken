@@ -1,5 +1,6 @@
 # CHUNKEN - CHUNK Extraction Node
-## CHUNKEN is designed to further process the text extracted by TEXTEN by chunking it into manageable parts and creating embeddings for these chunks. It integrates with OpenAI for generating embeddings and uses Pinecone and MongoDB for storage and retrieval of chunked data.
+
+CHUNKEN is designed to further process the text extracted by TEXTEN by chunking it into manageable parts and creating embeddings for these chunks. It integrates with OpenAI for generating embeddings and uses Pinecone and MongoDB for storage and retrieval of chunked data.
 
 Key Features
 - Text Preprocessing: Cleans and preprocesses text, removing unnecessary elements like headers, footers, and URLs.
