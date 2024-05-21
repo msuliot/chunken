@@ -73,3 +73,10 @@ The configuration is managed through a `config.json` file. Create a configuratio
     "scheduler_interval": 60
 }
 ```
+
+The Environmental variables is managed through a `.env` file. Create a file with the following structure:
+```bash
+OPENAI_API_KEY='key_here'
+PINECONE_API_KEY='key_here'
+MONGO="connection_string_here"
+```
