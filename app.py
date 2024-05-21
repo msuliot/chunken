@@ -153,7 +153,6 @@ def chunk_and_save_files(config):
             pinecone_objects.append(pinecone_object)
 
 
-        ####### TODO: upsert the objects to MongoDB
         try:
             with MongoDatabase(env.mongo_uri) as client:
                 mongo_results = client.insert_or_update_chunk(database, namespace, mongo_objects)

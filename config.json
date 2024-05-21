@@ -2,7 +2,7 @@
     "input_directories": [
       "/Users/msuliot/text_output"
     ],
-    "database": "blades-of-grass",
+    "database": "blades-of-grass-demo",
     "namespace": "demo24",
     "chunk_size": 1800, 
     "chuck_extension_limit": 248,
